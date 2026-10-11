@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root" dir="ltr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÉPI Boulangerie & Pâtisserie — Kafr Abdou, Alexandria</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        epi: {
+                            burgundy: '#6B1F2E',
+                            darkBurgundy: '#4A131F',
+                            pinkLight: '#E8C7CD',
+                            creamBg: '#F9F7F7',
+                            sand: '#E6DDCF',
+                            gold: '#C59B27',
+                            charcoal: '#333333'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .eiffel-stanley-bg {
+            background-image: linear-gradient(rgba(249, 247, 247, 0.70), rgba(249, 247, 247, 0.78)), url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=1600&auto=format&fit=crop');
+            background-position: center;
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        @keyframes customIntroZoom {
+            0% { transform: scale(0.2); opacity: 0; }
+            50% { transform: scale(1.15); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-intro-sequence {
+            animation: customIntroZoom 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes cartPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.35) rotate(-10deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        .animate-cart-pulse {
+            animation: cartPulse 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .flying-item {
+            position: fixed;
+            z-index: 9999;
+            pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border-radius: 50%;
+            box-shadow: 0 10px 25px rgba(107, 31, 46, 0.6);
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(35px);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-epi-creamBg text-epi-charcoal font-sans antialiased selection:bg-epi-pinkLight selection:text-epi-burgundy eiffel-stanley-bg">
+
+    <div id="intro-screen" class="fixed inset-0 bg-epi-burgundy z-50 flex flex-col items-center justify-center p-6 text-center transition-all duration-700">
+        <div class="max-w-md w-full bg-epi-darkBurgundy/95 backdrop-blur-xl p-8 md:p-12 rounded-3xl border border-epi-pinkLight/30 shadow-2xl animate-intro-sequence">
+            
+            <div class="w-32 h-32 mx-auto mb-6 rounded-full bg-epi-pinkLight/20 border-2 border-epi-gold flex items-center justify-center overflow-hidden shadow-2xl">
+                <img src="logo.jpg" alt="ÉPI Logo" class="w-full h-full object-cover">
+            </div>
+            
+            <h1 class="font-serif text-3xl md:text-4xl font-bold text-white mb-2">ÉPI Boulangerie</h1>
+            <p class="text-xs text-epi-pinkLight uppercase tracking-[0.3em] font-semibold mb-8">Kafr Abdou — Alexandria</p>
+
+            <p class="text-stone-300 text-sm mb-6 font-sans">Choose your preferred language / اختر لغتك المفضلة</p>
+
+            <div class="flex flex-col sm:flex-row gap-4">
+                <button onclick="selectLanguage('en')" class="flex-1 bg-epi-creamBg hover:bg-epi-sand text-epi-burgundy font-bold py-3.5 px-6 rounded-xl text-sm transition-all shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+                    <span>English</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+                <button onclick="selectLanguage('ar')" class="flex-1 bg-epi-gold hover:bg-yellow-600 text-white font-bold py-3.5 px-6 rounded-xl text-sm transition-all shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+                    <span>العربية</span>
+                    <i class="fa-solid fa-arrow-left text-xs"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <header class="sticky top-0 bg-epi-creamBg/95 backdrop-blur-md border-b border-epi-sand/60 z-40 shadow-sm transition-all duration-300">
+        <div class="max-w-6xl mx-auto px-4 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-12 h-12 rounded-full overflow-hidden border border-epi-gold shadow-md group-hover:rotate-12 transition-transform duration-300">
+                    <img src="logo.jpg" alt="ÉPI Logo" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <span class="font-serif text-2xl font-bold text-epi-burgundy tracking-widest block leading-none">É P I</span>
+                    <span class="text-[9px] tracking-[0.25em] text-epi-gold uppercase font-bold block mt-1">Boulangerie & Pâtisserie</span>
+                </div>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-stone-700">
+                <a href="#menu" class="hover:text-epi-burgundy transition-colors" data-i18n="navMenu">Menu</a>
+                <a href="#about-us" class="hover:text-epi-burgundy transition-colors" data-i18n="navAbout">About Us</a>
+                <a href="#find-us" class="hover:text-epi-burgundy transition-colors" data-i18n="navFindUs">Find Us</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <button onclick="toggleLang()" class="bg-epi-sand/50 text-epi-burgundy px-3.5 py-1.5 rounded-lg text-xs font-bold hover:bg-epi-sand transition-colors">
+                    <span id="lang-btn-text">العربية</span>
+                </button>
+
+                <button id="cart-btn" onclick="toggleCartModal()" class="relative bg-epi-burgundy text-epi-creamBg px-5 py-2.5 rounded-full text-sm font-medium hover:bg-epi-darkBurgundy transition-all flex items-center gap-2.5 shadow-md active:scale-95">
+                    <i class="fa-solid fa-basket-shopping text-epi-pinkLight"></i>
+                    <span id="cart-btn-label" data-i18n="basketBtn">Basket</span>
+                    <span id="cart-count" class="bg-epi-gold text-white rounded-full text-xs w-5 h-5 flex items-center justify-center font-bold">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="py-16 md:py-24 px-4 text-center">
+        <div class="max-w-3xl mx-auto fade-in-up">
+            <span class="inline-block px-4 py-1.5 bg-epi-pinkLight/80 text-epi-burgundy rounded-full text-xs font-bold uppercase tracking-widest mb-4 shadow-sm border border-epi-pinkLight" data-i18n="heroBadge">
+                🥐 Kafr Abdou, Alexandria — كفر عبده، الإسكندرية
+            </span>
+            <h1 class="font-serif text-5xl md:text-7xl font-bold text-epi-burgundy mb-6 leading-tight drop-shadow-sm" data-i18n="heroTitle">
+                L'Art de la Boulangerie Française
+            </h1>
+            <p class="text-stone-800 font-medium text-base md:text-lg mb-8 leading-relaxed font-sans" data-i18n="heroDesc">
+                Freshly baked artisan croissants, sourdough breads, French pâtisserie and specialty coffee daily.
+            </p>
+            <a href="#menu" class="inline-block bg-epi-burgundy text-epi-creamBg px-9 py-4 rounded-full text-sm font-bold hover:bg-epi-darkBurgundy transition-all shadow-xl hover:scale-105 active:scale-95" data-i18n="heroBtn">
+                Explore Menu & Order
+            </a>
+        </div>
+    </section>
+
+    <section id="menu" class="max-w-6xl mx-auto px-4 py-12">
+        <div class="text-center mb-10 fade-in-up">
+            <span class="text-epi-gold font-bold text-xs uppercase tracking-widest" data-i18n="menuSubtitle">Le Menu ÉPI</span>
+            <h2 class="font-serif text-4xl md:text-5xl font-bold text-epi-burgundy mt-1 mb-2" data-i18n="menuTitle">Our Menu & Prices</h2>
+            <p class="text-stone-700 text-xs font-bold" data-i18n="menuNote">All prices in EGP • Baked Fresh Every Morning</p>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-2 mb-10 fade-in-up" id="category-filters">
+            <button onclick="setCategory('all', event)" class="cat-btn active bg-epi-burgundy text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm" data-i18n="catAll">All</button>
+            <button onclick="setCategory('Bakery', event)" class="cat-btn bg-white/90 text-stone-700 hover:bg-epi-sand px-5 py-2.5 rounded-xl text-xs font-bold transition-all border border-epi-sand" data-i18n="catBakery">Bakery</button>
+            <button onclick="setCategory('Desserts', event)" class="cat-btn bg-white/90 text-stone-700 hover:bg-epi-sand px-5 py-2.5 rounded-xl text-xs font-bold transition-all border border-epi-sand" data-i18n="catDesserts">Desserts</button>
+            <button onclick="setCategory('Sandwiches', event)" class="cat-btn bg-white/90 text-stone-700 hover:bg-epi-sand px-5 py-2.5 rounded-xl text-xs font-bold transition-all border border-epi-sand" data-i18n="catSandwiches">Sandwiches</button>
+            <button onclick="setCategory('Coffee', event)" class="cat-btn bg-white/90 text-stone-700 hover:bg-epi-sand px-5 py-2.5 rounded-xl text-xs font-bold transition-all border border-epi-sand" data-i18n="catCoffee">Coffee</button>
+            <button onclick="setCategory('Matcha', event)" class="cat-btn bg-white/90 text-stone-700 hover:bg-epi-sand px-5 py-2.5 rounded-xl text-xs font-bold transition-all border border-epi-sand" data-i18n="catMatcha">Matcha & Frappe</button>
+        </div>
+
+        <div id="menu-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <div class="h-28 md:h-40"></div>
+
+    <section id="about-us" class="max-w-6xl mx-auto px-4 py-16">
+        <div class="text-center mb-12 fade-in-up">
+            <span class="text-epi-gold font-bold text-xs uppercase tracking-widest" data-i18n="aboutSubtitle">La Maison ÉPI</span>
+            <h2 class="font-serif text-4xl md:text-5xl font-bold text-epi-burgundy mt-1 mb-2" data-i18n="aboutTitle">About Us</h2>
+            <p class="text-stone-700 text-xs max-w-xl mx-auto font-medium" data-i18n="aboutSubtext">Brought straight from the Eiffel Tower's Paris to Kafr Abdou, Alexandria.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white/95 p-6 rounded-3xl border border-epi-sand shadow-md text-center fade-in-up hover:-translate-y-2 transition-transform duration-300">
+                <div class="h-52 rounded-2xl overflow-hidden mb-4 border border-epi-pinkLight/30 shadow-inner">
+                    <img src="cup-stamp.jpg" alt="Cup Stamp" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+                </div>
+                <h4 class="font-serif font-bold text-xl text-epi-burgundy" data-i18n="brandCup">Specialty Coffee Cup</h4>
+            </div>
+
+            <div class="bg-epi-burgundy text-white p-6 rounded-3xl shadow-xl text-center fade-in-up hover:-translate-y-2 transition-transform duration-300">
+                <div class="h-52 rounded-2xl overflow-hidden mb-4 border border-epi-pinkLight/20 shadow-inner">
+                    <img src="store-sign.jpg" alt="Store Signboard" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+                </div>
+                <h4 class="font-serif font-bold text-xl text-epi-pinkLight" data-i18n="brandStore">La Boutique Kafr Abdou</h4>
+            </div>
+
+            <div class="bg-white/95 p-6 rounded-3xl border border-epi-sand shadow-md text-center fade-in-up hover:-translate-y-2 transition-transform duration-300">
+                <div class="h-52 rounded-2xl overflow-hidden mb-4 border border-epi-sand shadow-inner">
+                    <img src="paper-bag.jpg" alt="Paper Bag" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+                </div>
+                <h4 class="font-serif font-bold text-xl text-epi-burgundy" data-i18n="brandBag">Eco Packaging Bag</h4>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 fade-in-up">
+            <div class="h-44 rounded-2xl overflow-hidden border border-epi-sand shadow-sm bg-white">
+                <img src="paper-bag1.jpg" alt="Packaging Detail 1" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+            </div>
+            <div class="h-44 rounded-2xl overflow-hidden border border-epi-sand shadow-sm bg-white">
+                <img src="paper-bag2.jpg" alt="Packaging Detail 2" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+            </div>
+            <div class="h-44 rounded-2xl overflow-hidden border border-epi-sand shadow-sm bg-white">
+                <img src="paper-bag3.jpg" alt="Packaging Detail 3" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+            </div>
+            <div class="h-44 rounded-2xl overflow-hidden border border-epi-sand shadow-sm bg-white">
+                <img src="paper-bag4.jpg" alt="Packaging Detail 4" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+            </div>
+        </div>
+    </section>
+
+    <div class="h-20 md:h-28"></div>
+
+    <section id="find-us" class="max-w-4xl mx-auto px-4 py-16 text-center fade-in-up">
+        <div class="bg-white/95 backdrop-blur-md p-8 md:p-12 rounded-3xl border border-epi-sand shadow-xl relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-epi-pinkLight/20 rounded-full blur-2xl -z-0"></div>
+            <i class="fa-solid fa-location-dot text-4xl text-epi-burgundy mb-4 animate-bounce relative z-10"></i>
+            <h2 class="font-serif text-3xl font-bold text-epi-burgundy mb-2 relative z-10" data-i18n="locTitle">Visit Us in Kafr Abdou</h2>
+            <p class="text-stone-700 font-medium text-base relative z-10" data-i18n="locAddress">Kafr Abdou, Alexandria, Egypt[cite: 10]</p>
+            <p class="text-xs text-stone-500 mt-1 mb-6 relative z-10 font-bold" data-i18n="locHours">Open Daily: 8:00 AM – 11:00 PM</p>
+            <a href="https://instagram.com/epi_egy" target="_blank" class="inline-flex items-center gap-2 bg-epi-burgundy text-white px-7 py-3.5 rounded-full text-xs font-bold hover:bg-epi-darkBurgundy transition-all shadow-md relative z-10">
+                <i class="fa-brands fa-instagram text-base"></i>
+                <span data-i18n="locInsta">Follow @epi_egy</span>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-stone-900 text-stone-400 text-xs py-8 text-center border-t border-stone-800">
+        <p class="mb-1" data-i18n="footerText">© 2026 ÉPI Boulangerie & Pâtisserie — Kafr Abdou, Alexandria. All rights reserved.</p>
+        <p class="text-epi-gold font-semibold tracking-wider">Designed & Developed by web.prime</p>
+    </footer>
+
+    <div id="cart-modal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 hidden">
+        <div class="fixed right-0 top-0 bottom-0 bg-white w-full max-w-md shadow-2xl flex flex-col p-6 overflow-y-auto">
+            <div class="flex items-center justify-between border-b pb-4 mb-4">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-basket-shopping text-epi-burgundy text-xl"></i>
+                    <h3 class="font-serif text-2xl font-bold text-epi-burgundy" data-i18n="cartHeader">Your Basket</h3>
+                </div>
+                <button onclick="toggleCartModal()" class="text-stone-400 hover:text-stone-800 text-2xl font-bold">&times;</button>
+            </div>
+
+            <div id="cart-items" class="flex-1 overflow-y-auto space-y-4 mb-4 divide-y divide-stone-100"></div>
+
+            <div class="border-t pt-4 space-y-4 bg-white sticky bottom-0">
+                <div class="flex justify-between font-serif text-xl font-bold text-epi-burgundy">
+                    <span data-i18n="cartTotal">Total:</span>
+                    <span id="cart-total">0 EGP</span>
+                </div>
+
+                <div class="space-y-3 text-xs">
+                    <div>
+                        <label class="block font-medium mb-1 text-stone-700" data-i18n="formMethod">Order Method</label>
+                        <select id="order-type" onchange="toggleAddressInput()" class="w-full border border-stone-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-epi-burgundy bg-white">
+                            <option value="delivery" data-i18n="optDelivery">Home Delivery</option>
+                            <option value="pickup" data-i18n="optPickup">Kafr Abdou Branch Pickup</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block font-medium mb-1 text-stone-700" data-i18n="formName">Full Name</label>
+                        <input type="text" id="cust-name" placeholder="John Doe" class="w-full border border-stone-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-epi-burgundy">
+                    </div>
+
+                    <div>
+                        <label class="block font-medium mb-1 text-stone-700" data-i18n="formPhone">Phone Number (11 digits)</label>
+                        <input type="tel" id="cust-phone" placeholder="01012345678" maxlength="11" class="w-full border border-stone-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-epi-burgundy">
+                    </div>
+
+                    <div id="address-container">
+                        <label class="block font-medium mb-1 text-stone-700" data-i18n="formAddress">Delivery Address</label>
+                        <input type="text" id="cust-address" placeholder="Street, Building No, Apartment" class="w-full border border-stone-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-epi-burgundy">
+                    </div>
+                </div>
+
+                <button onclick="sendWhatsAppOrder()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3.5 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-md">
+                    <i class="fa-brands fa-whatsapp text-lg"></i>
+                    <span data-i18n="whatsappBtn">Order via WhatsApp</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-epi-burgundy text-white px-6 py-3 rounded-full text-xs font-bold shadow-2xl z-50 flex items-center gap-2 transition-all opacity-0 pointer-events-none translate-y-4">
+        <i class="fa-solid fa-circle-check text-epi-gold"></i>
+        <span id="toast-msg">Added to basket!</span>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                navMenu: "Menu",
+                navAbout: "About Us",
+                navFindUs: "Find Us",
+                basketBtn: "Basket",
+                heroBadge: "🥐 Kafr Abdou, Alexandria",
+                heroTitle: "L'Art de la Boulangerie Française",
+                heroDesc: "Freshly baked artisan croissants, sourdough breads, French pâtisserie and specialty coffee daily.",
+                heroBtn: "Explore Menu & Order",
+                menuSubtitle: "Le Menu ÉPI",
+                menuTitle: "Our Menu & Prices",
+                menuNote: "All prices in EGP • Baked Fresh Every Morning",
+                catAll: "All",
+                catBakery: "Bakery",
+                catDesserts: "Desserts",
+                catSandwiches: "Sandwiches",
+                catCoffee: "Coffee",
+                catMatcha: "Matcha & Frappe",
+                aboutSubtitle: "La Maison ÉPI",
+                aboutTitle: "About Us",
+                aboutSubtext: "Brought straight from the Eiffel Tower's Paris to Kafr Abdou, Alexandria.",
+                brandCup: "Specialty Coffee Cup",
+                brandStore: "La Boutique Kafr Abdou",
+                brandBag: "Eco Packaging Bag",
+                locTitle: "Visit Us in Kafr Abdou",
+                locAddress: "Kafr Abdou, Alexandria, Egypt",
+                locHours: "Open Daily: 8:00 AM – 11:00 PM",
+                locInsta: "Follow @epi_egy",
+                footerText: "© 2026 ÉPI Boulangerie & Pâtisserie — Kafr Abdou, Alexandria. All rights reserved.",
+                cartHeader: "Your Basket",
+                cartTotal: "Total:",
+                formMethod: "Order Method",
+                optDelivery: "Home Delivery",
+                optPickup: "Kafr Abdou Branch Pickup",
+                formName: "Full Name",
+                formPhone: "Phone Number (11 digits)",
+                formAddress: "Delivery Address",
+                whatsappBtn: "Order via WhatsApp",
+                addBtn: "Add to Basket",
+                emptyBasket: "Basket is empty.",
+                toastAdded: "Added to basket!"
+            },
+            ar: {
+                navMenu: "المنيو",
+                navAbout: "عن المحل",
+                navFindUs: "موقعنا",
+                basketBtn: "السلة",
+                heroBadge: "🥐 كفر عبده، الإسكندرية",
+                heroTitle: "فن المخبوزات الفرنسية الأصيلة",
+                heroDesc: "كرواسون فرنسي طازج، مخبوزات بعجينة التخمير، حلويات فرنسية راقية وقهوة مختصة يومياً.",
+                heroBtn: "استعرض المنيو واطلب",
+                menuSubtitle: "قائمة إيبى (Le Menu)",
+                menuTitle: "المنيو والأسعار",
+                menuNote: "جميع الأسعار بالجنيه المصري • تُخبز طازجة كل صباح",
+                catAll: "الكل",
+                catBakery: "المخبوزات",
+                catDesserts: "الحلويات",
+                catSandwiches: "الساندوتشات",
+                catCoffee: "القهوة",
+                catMatcha: "ماتشا وفرابيه",
+                aboutSubtitle: "عن إيبى (La Maison ÉPI)",
+                aboutTitle: "عن المحل",
+                aboutSubtext: "من برج إيفل في باريس مباشرة إلى كفر عبده، الإسكندرية.",
+                brandCup: "كوب القهوة المختصة",
+                brandStore: "فرع كفر عبده الراقي",
+                brandBag: "أكياس التغليف الخاصة",
+                locTitle: "زورونا في كفر عبده",
+                locAddress: "كفر عبده، الإسكندرية، مصر",
+                locHours: "مفتوح يومياً: 8:00 صباحاً – 11:00 مساءً",
+                locInsta: "تابعونا على إنستجرام",
+                footerText: "© 2026 ÉPI Boulangerie & Pâtisserie — كفر عبده، الإسكندرية. جميع الحقوق محفوظة.",
+                cartHeader: "سلة المشتريات",
+                cartTotal: "الإجمالي:",
+                formMethod: "طريقة الاستلام",
+                optDelivery: "توصيل للمنزل",
+                optPickup: "استلام من فرع كفر عبده",
+                formName: "الاسم الكامل",
+                formPhone: "رقم الهاتف (11 رقم)",
+                formAddress: "عنوان التوصيل",
+                whatsappBtn: "إرسال الطلب عبر واتساب",
+                addBtn: "إضافة للسلة",
+                emptyBasket: "السلة فارغة.",
+                toastAdded: "تمت الإضافة للسلة!"
+            }
+        };
+
+        const menuData = [
+            { id: "b1", nameEn: "Butter Croissant", nameAr: "كرواسون بالزبدة", category: "Bakery", price: 80 },
+            { id: "b2", nameEn: "Chocolate Croissant", nameAr: "كرواسون شوكولاتة", category: "Bakery", price: 100 },
+            { id: "b3", nameEn: "Almond Croissant", nameAr: "كرواسون باللوز", category: "Bakery", price: 175 },
+            { id: "b4", nameEn: "Pistachio & Raspberry Croissant", nameAr: "كرواسون فستق وتوت", category: "Bakery", price: 185 },
+            { id: "b5", nameEn: "Classic Pain Au Chocolat", nameAr: "بان أو شوكولا كلاسيك", category: "Bakery", price: 100 },
+            { id: "b6", nameEn: "Vanilla Pain Suisse", nameAr: "بان سويس فانيليا", category: "Bakery", price: 125 },
+            { id: "b7", nameEn: "Apple & Cinnamon Danish", nameAr: "دانيش تفاح وقرفة", category: "Bakery", price: 125 },
+            
+            { id: "d1", nameEn: "Vanilla Mille-Feuille", nameAr: "ميل فوي فانيليا", category: "Desserts", price: 135 },
+            { id: "d2", nameEn: "Pistachio Mille-Feuille", nameAr: "ميل فوي فستق", category: "Desserts", price: 165 },
+            { id: "d3", nameEn: "New York Cheesecake", nameAr: "نيويورك تشيز كيك", category: "Desserts", price: 135 },
+            { id: "d4", nameEn: "Classic Tiramisu", nameAr: "تيراميسو كلاسيك", category: "Desserts", price: 140 },
+            { id: "d5", nameEn: "Pain Perdu Vanilla", nameAr: "بان بيردو فانيليا", category: "Desserts", price: 165 },
+
+            { id: "s1", nameEn: "Tuna Baguette", nameAr: "باجيت تونا", category: "Sandwiches", price: 165 },
+            { id: "s2", nameEn: "Smoked Turkey Baguette", nameAr: "باجيت ديك رومي مدخن", category: "Sandwiches", price: 175 },
+            { id: "s3", nameEn: "Halloumi Baguette", nameAr: "باجيت حلومي", category: "Sandwiches", price: 165 },
+            { id: "s4", nameEn: "Chicken Baguette", nameAr: "باجيت دجاج", category: "Sandwiches", price: 175 },
+            { id: "s5", nameEn: "Club Sandwich", nameAr: "كلوب ساندوتش", category: "Sandwiches", price: 185 },
+            { id: "s6", nameEn: "Croque Madame", nameAr: "كروك مادام", category: "Sandwiches", price: 195 },
+
+            { id: "c1", nameEn: "Espresso", nameAr: "إسبريسو", category: "Coffee", price: 75 },
+            { id: "c2", nameEn: "Double Espresso", nameAr: "دابل إسبريسو", category: "Coffee", price: 90 },
+            { id: "c3", nameEn: "Americano", nameAr: "أمريكانو", category: "Coffee", price: 80 },
+            { id: "c4", nameEn: "Cappuccino", nameAr: "كابتشينو", category: "Coffee", price: 100 },
+            { id: "c5", nameEn: "Café Latte", nameAr: "كافيه لاتي", category: "Coffee", price: 105 },
+            { id: "c6", nameEn: "Spanish Latte", nameAr: "سبانش لاتي", category: "Coffee", price: 120 },
+            { id: "c7", nameEn: "Salted Caramel Latte", nameAr: "سولتد كاراميل لاتي", category: "Coffee", price: 130 },
+            { id: "c8", nameEn: "Iced Spanish Latte", nameAr: "ايس سبانش لاتي", category: "Coffee", price: 125 },
+
+            { id: "m1", nameEn: "Matcha Latte", nameAr: "ماتشا لاتي", category: "Matcha", price: 130 },
+            { id: "m2", nameEn: "Iced Pistachio Matcha", nameAr: "ايس فستق ماتشا", category: "Matcha", price: 165 },
+            { id: "m3", nameEn: "Coffee Frappe", nameAr: "فرابيه قهوة", category: "Matcha", price: 135 },
+            { id: "m4", nameEn: "Crème Brûlée Latte", nameAr: "كريم بروليه لاتي", category: "Matcha", price: 150 }
+        ];
+
+        let cart = [];
+        let currentLang = 'en';
+        let currentCat = 'all';
+
+        function selectLanguage(lang) {
+            currentLang = lang;
+            const intro = document.getElementById('intro-screen');
+            if (intro) {
+                intro.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => intro.remove(), 700);
+            }
+
+            const htmlRoot = document.getElementById('html-root');
+            htmlRoot.setAttribute('lang', lang);
+            htmlRoot.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+            document.getElementById('lang-btn-text').innerText = lang === 'en' ? 'العربية' : 'English';
+            updateLanguageUI();
+        }
+
+        function toggleLang() {
+            const targetLang = currentLang === 'en' ? 'ar' : 'en';
+            selectLanguage(targetLang);
+        }
+
+        function updateLanguageUI() {
+            const dict = translations[currentLang];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) el.innerText = dict[key];
+            });
+            renderMenu();
+            updateCartUI();
+        }
+
+        function setCategory(cat, event) {
+            currentCat = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-epi-burgundy', 'text-white');
+                btn.classList.add('bg-white', 'text-stone-700');
+            });
+            event.currentTarget.classList.remove('bg-white', 'text-stone-700');
+            event.currentTarget.classList.add('bg-epi-burgundy', 'text-white');
+            renderMenu();
+        }
+
+        function renderMenu() {
+            const grid = document.getElementById('menu-grid');
+            const filtered = menuData.filter(i => currentCat === 'all' || i.category === currentCat);
+            const dict = translations[currentLang];
+
+            grid.innerHTML = filtered.map(item => `
+                <div class="bg-white/95 p-6 rounded-3xl border border-epi-sand shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group fade-in-up visible">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-serif text-xl font-bold text-epi-burgundy group-hover:text-epi-gold transition-colors">${currentLang === 'ar' ? item.nameAr : item.nameEn}</h3>
+                            <span class="font-bold text-epi-burgundy bg-epi-pinkLight/30 px-3.5 py-1 rounded-full text-xs">${item.price} EGP</span>
+                        </div>
+                        <p class="text-stone-500 text-xs mb-5">${currentLang === 'ar' ? 'يُحضر طازجاً في فرع كفر عبده.' : 'Freshly prepared in Kafr Abdou branch.'}</p>
+                    </div>
+                    
+                    <button onclick="addToCart('${item.id}', event)" class="w-full bg-epi-creamBg hover:bg-epi-burgundy hover:text-white text-epi-burgundy border border-epi-sand font-bold py-3 rounded-xl text-xs transition-all flex items-center justify-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>${dict.addBtn}</span>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id, event) {
+            const item = menuData.find(i => i.id === id);
+            const existing = cart.find(i => i.id === id);
+
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+
+            saveCart();
+            triggerFlyAnimation(event);
+            const itemName = currentLang === 'ar' ? item.nameAr : item.nameEn;
+            showToast(currentLang === 'ar' ? `تمت إضافة "${itemName}"!` : `Added "${itemName}"!`);
+        }
+
+        function triggerFlyAnimation(event) {
+            const cartBtn = document.getElementById('cart-btn');
+            const btnRect = event.currentTarget.getBoundingClientRect();
+            const targetRect = cartBtn.getBoundingClientRect();
+
+            const flyer = document.createElement('div');
+            flyer.className = 'flying-item bg-epi-burgundy text-white w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shadow-lg';
+            flyer.innerHTML = '🥐';
+            flyer.style.left = `${btnRect.left + btnRect.width / 2}px`;
+            flyer.style.top = `${btnRect.top + btnRect.height / 2}px`;
+
+            document.body.appendChild(flyer);
+
+            setTimeout(() => {
+                flyer.style.left = `${targetRect.left + targetRect.width / 2}px`;
+                flyer.style.top = `${targetRect.top + targetRect.height / 2}px`;
+                flyer.style.opacity = '0.2';
+                flyer.style.transform = 'scale(0.3)';
+            }, 20);
+
+            setTimeout(() => {
+                flyer.remove();
+                cartBtn.classList.add('animate-cart-pulse');
+                setTimeout(() => cartBtn.classList.remove('animate-cart-pulse'), 450);
+            }, 800);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+            }, 2200);
+        }
+
+        function saveCart() {
+            localStorage.setItem('epi_cart_v11', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const countEl = document.getElementById('cart-count');
+            const itemsEl = document.getElementById('cart-items');
+            const totalEl = document.getElementById('cart-total');
+            const dict = translations[currentLang];
+
+            const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            countEl.innerText = totalQty;
+            totalEl.innerText = `${totalPrice} EGP`;
+
+            if (cart.length === 0) {
+                itemsEl.innerHTML = `<div class="text-center text-stone-400 py-12 text-sm">${dict.emptyBasket}</div>`;
+                return;
+            }
+
+            itemsEl.innerHTML = cart.map(item => `
+                <div class="py-3 flex justify-between items-center text-sm">
+                    <div>
+                        <div class="font-bold text-epi-burgundy font-serif">${currentLang === 'ar' ? item.nameAr : item.nameEn}</div>
+                        <div class="text-xs text-stone-500">${item.price} EGP x ${item.quantity} = ${item.price * item.quantity} EGP</div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="changeQty('${item.id}', -1)" class="w-6 h-6 border rounded bg-stone-100 font-bold text-xs">-</button>
+                        <span class="text-xs font-bold">${item.quantity}</span>
+                        <button onclick="changeQty('${item.id}', 1)" class="w-6 h-6 border rounded bg-stone-100 font-bold text-xs">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function changeQty(id, delta) {
+            const idx = cart.findIndex(i => i.id === id);
+            if (idx !== -1) {
+                cart[idx].quantity += delta;
+                if (cart[idx].quantity <= 0) cart.splice(idx, 1);
+                saveCart();
+            }
+        }
+
+        function toggleCartModal() {
+            document.getElementById('cart-modal').classList.toggle('hidden');
+        }
+
+        function toggleAddressInput() {
+            const type = document.getElementById('order-type').value;
+            document.getElementById('address-container').classList.toggle('hidden', type === 'pickup');
+        }
+
+        function sendWhatsAppOrder() {
+            if (cart.length === 0) return alert(currentLang === 'ar' ? "السلة فارغة!" : "Basket is empty!");
+
+            const name = document.getElementById('cust-name').value.trim();
+            const phone = document.getElementById('cust-phone').value.trim();
+            const orderType = document.getElementById('order-type').value;
+            const address = document.getElementById('cust-address').value.trim();
+
+            if (!name || !phone) {
+                return alert(currentLang === 'ar' ? "الرجاء ادخال الاسم ورقم الهاتف." : "Please fill in Name & Phone.");
+            }
+
+            const phoneRegex = /^01\d{9}$/;
+            if (!phoneRegex.test(phone)) {
+                return alert(currentLang === 'ar' ? "رقم الهاتف يجب أن يتكون من 11 رقماً صحيحاً ويبدأ بـ 01." : "Phone number must be exactly 11 digits starting with 01.");
+            }
+
+            if (orderType === 'delivery' && !address) {
+                return alert(currentLang === 'ar' ? "الرجاء ادخال عنوان التوصيل." : "Please enter Delivery Address.");
+            }
+
+            let msg = `Bonjour ÉPI Boulangerie! 🥐\n\nNew Order Request:\n`;
+            msg += `👤 Name: ${name}\n📞 Phone: ${phone}\n📍 Type: ${orderType === 'delivery' ? `Delivery (${address})` : 'Pickup (Kafr Abdou)'}\n\n🛒 Order:\n`;
+
+            let total = 0;
+            cart.forEach(item => {
+                const sub = item.price * item.quantity;
+                total += sub;
+                const itemName = currentLang === 'ar' ? item.nameAr : item.nameEn;
+                msg += `- ${itemName} x${item.quantity} (${sub} EGP)\n`;
+            });
+
+            msg += `\n💰 Total: ${total} EGP`;
+
+            window.open(`https://wa.me/201000000000?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('epi_cart_v11');
+            if (saved) try { cart = JSON.parse(saved); } catch(e){}
+            renderMenu();
+            updateCartUI();
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) e.target.classList.add('visible');
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
