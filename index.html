@@ -144,7 +144,7 @@
     <section class="py-16 md:py-24 px-4 text-center">
         <div class="max-w-3xl mx-auto fade-in-up">
             <span class="inline-block px-4 py-1.5 bg-epi-pinkLight/80 text-epi-burgundy rounded-full text-xs font-bold uppercase tracking-widest mb-4 shadow-sm border border-epi-pinkLight" data-i18n="heroBadge">
-                🥐 Kafr Abdou, Alexandria — كفر عبده، الإسكندرية
+                🥐 Kafr Abdou, Alexandria
             </span>
             <h1 class="font-serif text-5xl md:text-7xl font-bold text-epi-burgundy mb-6 leading-tight drop-shadow-sm" data-i18n="heroTitle">
                 L'Art de la Boulangerie Française
@@ -274,6 +274,20 @@
                     </div>
 
                     <div>
+                        <label class="block font-medium mb-1 text-stone-700" data-i18n="formPay">Payment Method</label>
+                        <select id="pay-type" onchange="toggleInstapayInfo()" class="w-full border border-stone-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-epi-burgundy bg-white">
+                            <option value="cash" data-i18n="optCash">Cash on Delivery (كاش)</option>
+                            <option value="instapay">InstaPay (انستاباي)</option>
+                        </select>
+                    </div>
+
+                    <div id="instapay-info" class="hidden p-3 bg-stone-50 border border-epi-sand rounded-xl text-stone-700 space-y-2">
+                        <p class="font-bold text-epi-burgundy" data-i18n="ipTitle">InstaPay Transfer Info:</p>
+                        <p class="text-[11px]" data-i18n="ipDesc">Transfer to: <span class="font-mono font-bold text-black">ahmadkamal506@instapay</span></p>
+                        <a href="https://ipn.eg/S/ahmadkamal506/instapay/7qlbPQ" target="_blank" class="block text-center bg-epi-gold text-white font-bold py-2 rounded-lg text-xs hover:bg-yellow-600 transition-all" data-i18n="ipBtn">Pay via InstaPay Link</a>
+                    </div>
+
+                    <div>
                         <label class="block font-medium mb-1 text-stone-700" data-i18n="formName">Full Name</label>
                         <input type="text" id="cust-name" placeholder="John Doe" class="w-full border border-stone-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-epi-burgundy">
                     </div>
@@ -338,6 +352,11 @@
                 formMethod: "Order Method",
                 optDelivery: "Home Delivery",
                 optPickup: "Kafr Abdou Branch Pickup",
+                formPay: "Payment Method",
+                optCash: "Cash on Delivery",
+                ipTitle: "InstaPay Details:",
+                ipDesc: "Send to: ahmadkamal506@instapay",
+                ipBtn: "Open InstaPay Link",
                 formName: "Full Name",
                 formPhone: "Phone Number (11 digits)",
                 formAddress: "Delivery Address",
@@ -380,6 +399,11 @@
                 formMethod: "طريقة الاستلام",
                 optDelivery: "توصيل للمنزل",
                 optPickup: "استلام من فرع كفر عبده",
+                formPay: "طريقة الدفع",
+                optCash: "كاش عند الاستلام",
+                ipTitle: "بيانات تحويل InstaPay:",
+                ipDesc: "حول إلى: ahmadkamal506@instapay",
+                ipBtn: "اضغط للدفع عبر رابط انستاباي",
                 formName: "الاسم الكامل",
                 formPhone: "رقم الهاتف (11 رقم)",
                 formAddress: "عنوان التوصيل",
@@ -549,7 +573,7 @@
         }
 
         function saveCart() {
-            localStorage.setItem('epi_cart_v11', JSON.stringify(cart));
+            localStorage.setItem('epi_cart_v12', JSON.stringify(cart));
             updateCartUI();
         }
 
@@ -603,12 +627,18 @@
             document.getElementById('address-container').classList.toggle('hidden', type === 'pickup');
         }
 
+        function toggleInstapayInfo() {
+            const payType = document.getElementById('pay-type').value;
+            document.getElementById('instapay-info').classList.toggle('hidden', payType !== 'instapay');
+        }
+
         function sendWhatsAppOrder() {
             if (cart.length === 0) return alert(currentLang === 'ar' ? "السلة فارغة!" : "Basket is empty!");
 
             const name = document.getElementById('cust-name').value.trim();
             const phone = document.getElementById('cust-phone').value.trim();
             const orderType = document.getElementById('order-type').value;
+            const payType = document.getElementById('pay-type').value;
             const address = document.getElementById('cust-address').value.trim();
 
             if (!name || !phone) {
@@ -625,7 +655,8 @@
             }
 
             let msg = `Bonjour ÉPI Boulangerie! 🥐\n\nNew Order Request:\n`;
-            msg += `👤 Name: ${name}\n📞 Phone: ${phone}\n📍 Type: ${orderType === 'delivery' ? `Delivery (${address})` : 'Pickup (Kafr Abdou)'}\n\n🛒 Order:\n`;
+            msg += `👤 Name: ${name}\n📞 Phone: ${phone}\n📍 Type: ${orderType === 'delivery' ? `Delivery (${address})` : 'Pickup (Kafr Abdou)'}\n`;
+            msg += `💳 Payment: ${payType === 'instapay' ? 'InstaPay (ahmadkamal506@instapay)' : 'Cash on Delivery'}\n\n🛒 Order:\n`;
 
             let total = 0;
             cart.forEach(item => {
@@ -637,11 +668,11 @@
 
             msg += `\n💰 Total: ${total} EGP`;
 
-            window.open(`https://wa.me/201000000000?text=${encodeURIComponent(msg)}`, '_blank');
+            window.open(`https://wa.me/201207402746?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            const saved = localStorage.getItem('epi_cart_v11');
+            const saved = localStorage.getItem('epi_cart_v12');
             if (saved) try { cart = JSON.parse(saved); } catch(e){}
             renderMenu();
             updateCartUI();
