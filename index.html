@@ -418,19 +418,22 @@
         };
 
         const menuData = [
-            { id: "b1", nameEn: "Butter Croissant", nameAr: "كرواسون بالزبدة", category: "Bakery", price: 80 },
-            { id: "b2", nameEn: "Chocolate Croissant", nameAr: "كرواسون شوكولاتة", category: "Bakery", price: 100 },
-            { id: "b3", nameEn: "Almond Croissant", nameAr: "كرواسون باللوز", category: "Bakery", price: 175 },
-            { id: "b4", nameEn: "Pistachio & Raspberry Croissant", nameAr: "كرواسون فستق وتوت", category: "Bakery", price: 185 },
-            { id: "b5", nameEn: "Classic Pain Au Chocolat", nameAr: "بان أو شوكولا كلاسيك", category: "Bakery", price: 100 },
-            { id: "b6", nameEn: "Vanilla Pain Suisse", nameAr: "بان سويس فانيليا", category: "Bakery", price: 125 },
-            { id: "b7", nameEn: "Apple & Cinnamon Danish", nameAr: "دانيش تفاح وقرفة", category: "Bakery", price: 125 },
+            { id: "b1", nameEn: "Savory Turkey Croissant", nameAr: "كرواسون ديك رومي", category: "Sandwiches", price: 175, image: "WhatsApp Image 2026-10-18 at 2.27.33 PM.jpeg" },
+            { id: "b2", nameEn: "Mini Brownies", nameAr: "ميني براونيز", category: "Desserts", price: 120, image: "WhatsApp Image 2026-10-18 at 2.27.33 PM (1).jpeg" },
+            { id: "b3", nameEn: "Signature Cinnamon Roll", nameAr: "سينامون رول أوريجينال", category: "Bakery", price: 110, image: "WhatsApp Image 2026-10-18 at 2.27.33 PM (2).jpeg" },
+            { id: "b4", nameEn: "Blueberry Cheesecake", nameAr: "تشيز كيك توت", category: "Desserts", price: 135, image: "WhatsApp Image 2026-10-18 at 2.27.33 PM (3).jpeg" },
+            { id: "b5", nameEn: "Butter Croissant", nameAr: "كرواسون بالزبدة", category: "Bakery", price: 80 },
+            { id: "b6", nameEn: "Chocolate Croissant", nameAr: "كرواسون شوكولاتة", category: "Bakery", price: 100 },
+            { id: "b7", nameEn: "Almond Croissant", nameAr: "كرواسون باللوز", category: "Bakery", price: 175 },
+            { id: "b8", nameEn: "Pistachio & Raspberry Croissant", nameAr: "كرواسون فستق وتوت", category: "Bakery", price: 185 },
+            { id: "b9", nameEn: "Classic Pain Au Chocolat", nameAr: "بان أو شوكولا كلاسيك", category: "Bakery", price: 100 },
+            { id: "b10", nameEn: "Vanilla Pain Suisse", nameAr: "بان سويس فانيليا", category: "Bakery", price: 125 },
+            { id: "b11", nameEn: "Apple & Cinnamon Danish", nameAr: "دانيش تفاح وقرفة", category: "Bakery", price: 125 },
             
             { id: "d1", nameEn: "Vanilla Mille-Feuille", nameAr: "ميل فوي فانيليا", category: "Desserts", price: 135 },
             { id: "d2", nameEn: "Pistachio Mille-Feuille", nameAr: "ميل فوي فستق", category: "Desserts", price: 165 },
-            { id: "d3", nameEn: "New York Cheesecake", nameAr: "نيويورك تشيز كيك", category: "Desserts", price: 135 },
-            { id: "d4", nameEn: "Classic Tiramisu", nameAr: "تيراميسو كلاسيك", category: "Desserts", price: 140 },
-            { id: "d5", nameEn: "Pain Perdu Vanilla", nameAr: "بان بيردو فانيليا", category: "Desserts", price: 165 },
+            { id: "d3", nameEn: "Classic Tiramisu", nameAr: "تيراميسو كلاسيك", category: "Desserts", price: 140 },
+            { id: "d4", nameEn: "Pain Perdu Vanilla", nameAr: "بان بيردو فانيليا", category: "Desserts", price: 165 },
 
             { id: "s1", nameEn: "Tuna Baguette", nameAr: "باجيت تونا", category: "Sandwiches", price: 165 },
             { id: "s2", nameEn: "Smoked Turkey Baguette", nameAr: "باجيت ديك رومي مدخن", category: "Sandwiches", price: 175 },
@@ -508,6 +511,10 @@
             grid.innerHTML = filtered.map(item => `
                 <div class="bg-white/95 p-6 rounded-3xl border border-epi-sand shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group fade-in-up visible">
                     <div>
+                        ${item.image ? `
+                        <div class="h-48 w-full rounded-2xl overflow-hidden mb-4 border border-epi-sand shadow-inner">
+                            <img src="${item.image}" alt="${currentLang === 'ar' ? item.nameAr : item.nameEn}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>` : ''}
                         <div class="flex justify-between items-start mb-2">
                             <h3 class="font-serif text-xl font-bold text-epi-burgundy group-hover:text-epi-gold transition-colors">${currentLang === 'ar' ? item.nameAr : item.nameEn}</h3>
                             <span class="font-bold text-epi-burgundy bg-epi-pinkLight/30 px-3.5 py-1 rounded-full text-xs">${item.price} EGP</span>
